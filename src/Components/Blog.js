@@ -19,6 +19,12 @@ export default function Blog(){
         console.log(blogs);
     }
 
+
+    //to delete the blog from the array
+    function handleDelete(i){
+        setBlogs(blogs.filter((blog,index)=> i !== index));
+    }
+
     return(
         <>
         {/* Heading of the page */}
@@ -62,6 +68,12 @@ export default function Blog(){
             <div className="blog" key={i}>
                 <h3>{blog.title}</h3>
                 <p>{blog.content}</p>
+
+                <div className="blog-btn">
+                    <button className="btn remove" onClick={()=> handleDelete(i)}>
+                        Delete
+                    </button>
+                </div>
             </div>
         ))}
         
