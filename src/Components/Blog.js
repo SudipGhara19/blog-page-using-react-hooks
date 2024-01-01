@@ -14,6 +14,8 @@ export default function Blog(){
         e.preventDefault();
 
         setBlogs([{title,content},...blogs]);
+        setTitle("");
+        setContent("");
         console.log(blogs);
     }
 
