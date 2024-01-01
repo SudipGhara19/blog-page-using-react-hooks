@@ -5,10 +5,16 @@ export default function Blog(){
 
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
+
+    //added an empty arrat to store the blogs after clicking the add button
+    const [blogs, setBlogs] = useState([]);
     
     //Passing the synthetic event as argument to stop refreshing the page on submit
     function handleSubmit(e){
         e.preventDefault();
+
+        setBlogs([{title,content},...blogs]);
+        console.log(blogs);
     }
 
     return(
@@ -41,7 +47,7 @@ export default function Blog(){
                 </Row >
 
                 {/* Button to submit the blog */}            
-                <button className = "btn">ADD</button>
+                <button className = "btn" type="submit">ADD</button>
             </form>
                      
         </div>
@@ -50,8 +56,12 @@ export default function Blog(){
 
         {/* Section where submitted blogs will be displayed */}
         <h2> Blogs </h2>
-        <h3>{title}</h3>
-        <p>{content}</p>
+        {blogs.map((blog,i)=>(
+            <div className="blog" key={i}>
+                <h3>{blog.title}</h3>
+                <p>{blog.content}</p>
+            </div>
+        ))}
         
         </>
         )
