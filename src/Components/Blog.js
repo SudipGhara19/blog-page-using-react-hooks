@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 
 //Blogging App using Hooks
 export default function Blog(){
@@ -12,6 +12,11 @@ export default function Blog(){
 
     //created for bring back the foucus in title field after submmit the form
     const titleRef = useRef(null);
+
+
+    useEffect(()=> {
+        titleRef.current.focus();
+    },[])
     
     //Passing the synthetic event as argument to stop refreshing the page on submit
     function handleSubmit(e){
