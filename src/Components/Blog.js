@@ -16,7 +16,16 @@ export default function Blog(){
 
     useEffect(()=> {
         titleRef.current.focus();
-    },[])
+    },[]);
+
+    //for title after add a blog
+    useEffect(()=>{
+        if(blogs.length && blogs[0].title){
+            document.title = blogs[0].title;
+        }else{
+            document.title = "No blogs!!";
+        }
+    },[blogs]);
     
     //Passing the synthetic event as argument to stop refreshing the page on submit
     function handleSubmit(e){
@@ -26,6 +35,7 @@ export default function Blog(){
         setFormData({title: "", content: ""});
 
         titleRef.current.focus();
+       
         console.log(blogs);
     }
 
@@ -53,7 +63,8 @@ export default function Blog(){
                                 value={formData.title}
                                 onChange={(e)=> 
                                 setFormData({title: e.target.value, content: formData.content})}
-                                ref={titleRef}/>
+                                ref={titleRef}
+                                required/>
                                 
                 </Row >
 
@@ -62,7 +73,9 @@ export default function Blog(){
                         <textarea className="input content"
                                 placeholder="Content of the Blog goes here.."
                                 value={formData.content}
-                                onChange={(e)=> setFormData({title: formData.title, content: e.target.value})}/>
+                                onChange={(e)=> 
+                                setFormData({title: formData.title, content: e.target.value})}
+                                required/>
                                 
                 </Row >
 
