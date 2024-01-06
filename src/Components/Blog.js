@@ -1,19 +1,8 @@
-import { useState, useRef, useEffect, useReducer } from "react";
+import { useState, useRef, useEffect } from "react";
+import { db } from "../firebaseinit";
 
 
-// 2. create blogReducer function
-const blogReducer = (state, action) =>{
-    switch (action.type){
-        case "ADD":
-            return [action.blog, ...state];
-        
-        case "REMOVE":
-            return state.filter((blog, index)=> index !== action.index);
 
-        default:
-            return [];
-    }
-}
 
 //Blogging App using Hooks
 export default function Blog(){
@@ -23,10 +12,9 @@ export default function Blog(){
     const [formData, setFormData] = useState({title:"", content:""});
 
     //added an empty arrat to store the blogs after clicking the add button
-    // const [blogs, setBlogs] = useState([]);
+    const [blogs, setBlogs] = useState([]);
 
-    // 1. replace useState with useReducer()
-    const [blogs, dispatch] = useReducer(blogReducer, []);
+    
 
     //created for bring back the foucus in title field after submmit the form
     const titleRef = useRef(null);
@@ -49,13 +37,11 @@ export default function Blog(){
     function handleSubmit(e){
         e.preventDefault();
 
-        // setBlogs([{title: formData.title, content: formData.content}, ...blogs]);
-
-        // 3. Replacing setBlogs with dispatch functin
-        dispatch({type: "ADD", blog: {title: formData.title, content: formData.content}});
-        setFormData({title: "", content: ""});
+        setBlogs([{title: formData.title, content: formData.content}, ...blogs]);
 
         titleRef.current.focus();
+
+        setFormData({title: "", content: ""});
        
         console.log(blogs);
     }
@@ -63,10 +49,7 @@ export default function Blog(){
 
     //to delete the blog from the array
     function handleDelete(i){
-        // setBlogs(blogs.filter((blog,index)=> i !== index));
-
-        // 4. Replaceing setBlogs with dispatch function
-        dispatch({type: "REMOVE", index: i})
+        setBlogs(blogs.filter((blog,index)=> i !== index));
     }
 
     return(
