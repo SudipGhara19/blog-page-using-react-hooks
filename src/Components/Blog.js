@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { db } from "../firebaseinit";
+import { collection, addDoc } from "firebase/firestore";
 
 
 
@@ -34,10 +35,18 @@ export default function Blog(){
     },[blogs]);
     
     //Passing the synthetic event as argument to stop refreshing the page on submit
-    function handleSubmit(e){
+    async function handleSubmit(e){
         e.preventDefault();
 
         setBlogs([{title: formData.title, content: formData.content}, ...blogs]);
+
+        //adding data to the firebase dataBase
+        const docRef = await addDoc(collection(db, "blogs"),{
+            title: formData.title,
+            content: formData.content,
+            createdOn: new Date()
+        });
+
 
         titleRef.current.focus();
 
