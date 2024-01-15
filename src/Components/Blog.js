@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { db } from "../firebaseinit";
-import { collection, addDoc } from "firebase/firestore";
+import { collection, addDoc, doc, setDoc } from "firebase/firestore";
 
 
 
@@ -40,8 +40,9 @@ export default function Blog(){
 
         setBlogs([{title: formData.title, content: formData.content}, ...blogs]);
 
-        //adding data to the firebase dataBase
-        const docRef = await addDoc(collection(db, "blogs"),{
+        //adding data to the firebase dataBase by setDoc This time
+        const docRef = doc(collection(db, "blogs"));
+        await setDoc (docRef,{
             title: formData.title,
             content: formData.content,
             createdOn: new Date()
