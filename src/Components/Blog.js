@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { db } from "../firebaseinit";
-import { collection, addDoc, doc, setDoc, getDocs } from "firebase/firestore";
+import { collection, addDoc, doc, setDoc, getDocs, onSnapshot } from "firebase/firestore";
 
 
 
@@ -28,19 +28,28 @@ export default function Blog(){
 
     //getting the docs from firestore collection in the initial render
     useEffect(()=>{
-        async function fetchData (){
-           const snapShot = await getDocs(collection(db, "blogs"));
-           const blogs = snapShot.docs.map((doc) => {
-            return{
-                id: doc.id,
-                ...doc.data()
-            }
-           })
+        // async function fetchData (){
+        //    const snapShot = await getDocs(collection(db, "blogs"));
+        //    const blogs = snapShot.docs.map((doc) => {
+        //     return{
+        //         id: doc.id,
+        //         ...doc.data()
+        //     }
+        //    })
 
-           setBlogs(blogs);
-        };
+        //    setBlogs(blogs);
 
-        fetchData();
+            const unsub = onSnapshot(collection(db, "blogs"), (snapshot) => {
+                const blogs = snapshot.docs.map((doc)=>{
+                    return{
+                        id: doc.id,
+                        ...doc.data()
+                    }
+                });
+
+                setBlogs(blogs);
+                
+            })
 
     },[]);
 
@@ -57,7 +66,7 @@ export default function Blog(){
     async function handleSubmit(e){
         e.preventDefault();
 
-        setBlogs([{title: formData.title, content: formData.content}, ...blogs]);
+        // setBlogs([{title: formData.title, content: formData.content}, ...blogs]);
 
         //adding data to the firebase dataBase by setDoc This time
         const docRef = doc(collection(db, "blogs"));
