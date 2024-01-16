@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { db } from "../firebaseinit";
-import { collection, addDoc, doc, setDoc } from "firebase/firestore";
+import { collection, addDoc, doc, setDoc, getDocs } from "firebase/firestore";
 
 
 
@@ -23,6 +23,25 @@ export default function Blog(){
 
     useEffect(()=> {
         titleRef.current.focus();
+    },[]);
+
+
+    //getting the docs from firestore collection in the initial render
+    useEffect(()=>{
+        async function fetchData (){
+           const snapShot = await getDocs(collection(db, "blogs"));
+           const blogs = snapShot.docs.map((doc) => {
+            return{
+                id: doc.id,
+                ...doc.data()
+            }
+           })
+
+           setBlogs(blogs);
+        };
+
+        fetchData();
+
     },[]);
 
     //for title after add a blog
@@ -61,6 +80,8 @@ export default function Blog(){
     function handleDelete(i){
         setBlogs(blogs.filter((blog,index)=> i !== index));
     }
+
+    const quarySnapShot = getDocs(collection(db, "blogs"))
 
     return(
         <>
@@ -106,18 +127,18 @@ export default function Blog(){
 
         {/* Section where submitted blogs will be displayed */}
         <h2> Blogs </h2>
-        {blogs.map((blog,i)=>(
-            <div className="blog" key={i}>
-                <h3>{blog.title}</h3>
-                <p>{blog.content}</p>
+            {blogs.map((blog,i)=>(
+                <div className="blog" key={i}>
+                    <h3>{blog.title}</h3>
+                    <p>{blog.content}</p>
 
-                <div className="blog-btn">
-                    <button className="btn remove" onClick={()=> handleDelete(i)}>
-                        Delete
-                    </button>
+                    <div className="blog-btn">
+                        <button className="btn remove" onClick={()=> handleDelete(i)}>
+                            Delete
+                        </button>
+                    </div>
                 </div>
-            </div>
-        ))}
+            ))}
         
         </>
         )
