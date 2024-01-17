@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { db } from "../firebaseinit";
-import { collection, addDoc, doc, setDoc, getDocs, onSnapshot } from "firebase/firestore";
+import { collection, addDoc, doc, setDoc, getDocs, onSnapshot, deleteDoc } from "firebase/firestore";
 
 
 
@@ -39,8 +39,8 @@ export default function Blog(){
 
         //    setBlogs(blogs);
 
-            const unsub = onSnapshot(collection(db, "blogs"), (snapshot) => {
-                const blogs = snapshot.docs.map((doc)=>{
+            const unsub = onSnapshot(collection(db, "blogs"), (snapShot) => {
+                const blogs = snapShot.docs.map((doc)=>{
                     return{
                         id: doc.id,
                         ...doc.data()
@@ -86,11 +86,12 @@ export default function Blog(){
 
 
     //to delete the blog from the array
-    function handleDelete(i){
-        setBlogs(blogs.filter((blog,index)=> i !== index));
+    async function handleDelete(id){
+        // setBlogs(blogs.filter((blog,index)=> i !== index));
+        await deleteDoc(doc(db, "blogs", id));
+
     }
 
-    const quarySnapShot = getDocs(collection(db, "blogs"))
 
     return(
         <>
@@ -142,7 +143,7 @@ export default function Blog(){
                     <p>{blog.content}</p>
 
                     <div className="blog-btn">
-                        <button className="btn remove" onClick={()=> handleDelete(i)}>
+                        <button className="btn remove" onClick={()=> handleDelete(blog.id)}>
                             Delete
                         </button>
                     </div>
